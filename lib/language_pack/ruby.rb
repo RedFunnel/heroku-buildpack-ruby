@@ -414,7 +414,7 @@ ERROR
 
         sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
-        raise Dir.entries(sqlite3_include).join(', ')
+        raise Dir.entries(libsqlite3_dir).join(', ')
 
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
