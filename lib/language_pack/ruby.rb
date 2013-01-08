@@ -348,7 +348,7 @@ ERROR
   def install_libsqlite3(dir)
     FileUtils.mkdir_p dir
     Dir.chdir(dir) do |dir|
-      run("curl http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.tgz -s -o -| tar xzf -")
+      run("curl http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.tgz -s -o - | tar xzf -")
     end
   end
 
