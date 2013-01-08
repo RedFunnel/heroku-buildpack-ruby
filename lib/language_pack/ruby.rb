@@ -8,6 +8,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   BUILDPACK_VERSION   = "v46"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
+  LIBSQLITE3_PATH     = "fatstax-sqlite-amalgamation-3071501"
   BUNDLER_VERSION     = "1.3.0.pre.2"
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
@@ -344,6 +345,13 @@ ERROR
     end
   end
 
+  def install_libsqlite3(dir)
+    FileUtils.mkdir_p dir
+    Dir.chdir(dir) do |dir|
+      run("curl -O http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.zip && unzip #{LIBSQLITE3_PATH}.zip")
+    end
+  end
+
   # remove `vendor/bundle` that comes from the git repo
   # in case there are native ext.
   # users should be using `bundle pack` instead.
@@ -384,13 +392,20 @@ ERROR
 
       bundler_output = ""
 
+      Dir.mktmpdir("sqlite3-") do |tmpdir|
+
+        libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
+        install_libsqlite3(libsqlite3_dir)
+        
+        # need to setup compile environment for the sqlite gem
+        sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
+        sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
+      end
+
       Dir.mktmpdir("libyaml-") do |tmpdir|
+
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
-
-        # need to setup compile environment for the sqlite gem
-        sqlite_include  = "/app/vendor/sqlite3"
-        sqlite_lib      = "/app/vendor/sqlite3"
 
         # need to setup compile environment for the psych gem
         yaml_include   = File.expand_path("#{libyaml_dir}/include")
@@ -398,7 +413,7 @@ ERROR
         pwd            = run("pwd").chomp
         # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
         # codon since it uses bundler.
-        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
+        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite3_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite3_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
         puts "Running: #{bundle_command}"
         bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
 
