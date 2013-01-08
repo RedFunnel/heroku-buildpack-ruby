@@ -392,7 +392,18 @@ ERROR
 
       bundler_output = ""
 
-      Dir.mktmpdir("sqlite3-") do |tmpdir|
+      # Dir.mktmpdir("sqlite3-") do |tmpdir|
+
+      #   libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
+      #   install_libsqlite3(libsqlite3_dir)
+        
+      #   # need to setup compile environment for the sqlite gem
+      #   sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
+      #   sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
+      # end
+
+      Dir.mktmpdir("libyaml-") do |tmpdir|
+        
 
         libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
         install_libsqlite3(libsqlite3_dir)
@@ -400,9 +411,6 @@ ERROR
         # need to setup compile environment for the sqlite gem
         sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
         sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
-      end
-
-      Dir.mktmpdir("libyaml-") do |tmpdir|
 
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
