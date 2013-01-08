@@ -405,13 +405,12 @@ ERROR
       Dir.mktmpdir("libyaml-") do |tmpdir|
 
 
-        # libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
-        libsqlite3_dir = "#{tmpdir}"
+        libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
         install_libsqlite3(libsqlite3_dir)
         
         # need to setup compile environment for the sqlite gem
-        sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
-        sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
+        sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
+        sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
 
         # sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
