@@ -485,6 +485,7 @@ WARNING
 
   # runs bundler to install the dependencies
   def build_bundler
+<<<<<<< HEAD
     instrument 'ruby.build_bundler' do
       log("bundle") do
         bundle_without = ENV["BUNDLE_WITHOUT"] || "development:test"
@@ -494,6 +495,78 @@ WARNING
         unless File.exist?("Gemfile.lock")
           error "Gemfile.lock is required. Please run \"bundle install\" locally\nand commit your Gemfile.lock."
         end
+=======
+    log("bundle") do
+      bundle_without = ENV["BUNDLE_WITHOUT"] || "development:test"
+      bundle_command = "bundle install --without #{bundle_without} --path vendor/bundle --binstubs vendor/bundle/bin"
+
+      unless File.exist?("Gemfile.lock")
+        error "Gemfile.lock is required. Please run \"bundle install\" locally\nand commit your Gemfile.lock."
+      end
+
+      if has_windows_gemfile_lock?
+        log("bundle", "has_windows_gemfile_lock")
+        File.unlink("Gemfile.lock")
+      else
+        # using --deployment is preferred if we can
+        bundle_command += " --deployment"
+        cache_load ".bundle"
+      end
+
+      version = run("env RUBYOPT=\"#{syck_hack}\" bundle version").strip
+      topic("Installing dependencies using #{version}")
+
+      load_bundler_cache
+
+      bundler_output = ""
+
+      # Dir.mktmpdir("sqlite3-") do |tmpdir|
+
+      #   libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
+      #   install_libsqlite3(libsqlite3_dir)
+
+      #   # need to setup compile environment for the sqlite gem
+      #   sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
+      #   sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
+      # end
+
+      Dir.mktmpdir("libyaml-") do |tmpdir|
+
+
+        libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
+        install_libsqlite3(libsqlite3_dir)
+
+        # need to setup compile environment for the sqlite gem
+        sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
+        sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
+
+        sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
+
+        raise Dir.entries(libsqlite3_dir).join(', ')
+
+        libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
+        install_libyaml(libyaml_dir)
+
+        # need to setup compile environment for the psych gem
+        yaml_include   = File.expand_path("#{libyaml_dir}/include")
+        yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
+        pwd            = run("pwd").chomp
+        # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
+        # codon since it uses bundler.
+        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile #{sqlite3_build_var} BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite3_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite3_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite3_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
+        puts "Running: #{bundle_command}"
+        bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+
+      end
+
+
+      if $?.success?
+        log "bundle", :status => "success"
+        puts "Cleaning up the bundler cache."
+        pipe "bundle clean"
+        cache_store ".bundle"
+        cache_store "vendor/bundle"
+>>>>>>> changed from zip to tgz archive. zip wasn't available
 
         if has_windows_gemfile_lock?
           warn(<<WARNING, inline: true)
