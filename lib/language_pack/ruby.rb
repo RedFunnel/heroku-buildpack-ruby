@@ -412,7 +412,7 @@ ERROR
         sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
         sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
 
-        # sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
+        sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
         puts "#{libsqlite3_dir} => " + Dir.entries(libsqlite3_dir).join(', ')
         puts "#{sqlite3_include} => " + Dir.entries(sqlite3_include).join(', ')
@@ -427,7 +427,7 @@ ERROR
         pwd            = run("pwd").chomp
         # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
         # codon since it uses bundler.
-        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite3_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite3_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite3_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
+        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile #{sqlite3_build_var} BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite3_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite3_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite3_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
         puts "Running: #{bundle_command}"
         bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
 
