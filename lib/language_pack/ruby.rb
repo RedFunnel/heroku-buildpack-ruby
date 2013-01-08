@@ -348,7 +348,7 @@ ERROR
   def install_libsqlite3(dir)
     FileUtils.mkdir_p dir
     Dir.chdir(dir) do |dir|
-      run("curl -O http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.zip && unzip #{LIBSQLITE3_PATH}.zip")
+      run("curl http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.tgz -s -o -| tar xzf -")
     end
   end
 
@@ -415,7 +415,7 @@ ERROR
         sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
         raise Dir.entries(libsqlite3_dir).join(', ')
-        
+
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
 
