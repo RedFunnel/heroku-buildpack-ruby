@@ -383,9 +383,14 @@ ERROR
       load_bundler_cache
 
       bundler_output = ""
+
       Dir.mktmpdir("libyaml-") do |tmpdir|
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
+
+        # need to setup compile environment for the sqlite gem
+        sqlite_include  = "/app/vendor/sqlite3"
+        sqlite_lib      = "/app/vendor/sqlite3"
 
         # need to setup compile environment for the psych gem
         yaml_include   = File.expand_path("#{libyaml_dir}/include")
@@ -393,11 +398,12 @@ ERROR
         pwd            = run("pwd").chomp
         # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
         # codon since it uses bundler.
-        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:$CPATH CPPATH=#{yaml_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
+        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
         puts "Running: #{bundle_command}"
         bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
 
       end
+
 
       if $?.success?
         log "bundle", :status => "success"
