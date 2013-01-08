@@ -414,9 +414,9 @@ ERROR
 
         sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
-        puts Dir.entries(libsqlite3_dir).join(', ')
-        puts Dir.entries(sqlite3_include).join(', ')
-        puts Dir.entries(sqlite3_lib).join(', ')
+        puts "#{libsqlite3_dir} => " + Dir.entries(libsqlite3_dir).join(', ')
+        puts "#{sqlite3_include} => " + Dir.entries(sqlite3_include).join(', ')
+        puts "#{sqlite3_lib} => " + Dir.entries(sqlite3_lib).join(', ')
 
         libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
         install_libyaml(libyaml_dir)
