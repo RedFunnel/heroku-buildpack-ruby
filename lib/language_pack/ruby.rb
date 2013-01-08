@@ -455,9 +455,11 @@ WARNING
   end
 
   def install_libsqlite3(dir)
-    FileUtils.mkdir_p dir
-    Dir.chdir(dir) do |dir|
-      run("curl http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.tgz -s -o - | tar xzf -")
+    instrument 'ruby.install_libsqlite3' do
+      FileUtils.mkdir_p dir
+      Dir.chdir(dir) do |dir|
+        run("curl http://assets.fatstax.com.s3.amazonaws.com/#{LIBSQLITE3_PATH}.tgz -s -o - | tar xzf -")
+      end
     end
   end
 
@@ -566,6 +568,20 @@ WARNING
         bundler_output = ""
         bundle_time    = nil
         Dir.mktmpdir("libyaml-") do |tmpdir|
+
+          libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
+          install_libsqlite3(libsqlite3_dir)
+
+          # need to setup compile environment for the sqlite gem
+          sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
+          sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
+
+          sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
+
+          puts "#{libsqlite3_dir} => " + Dir.entries(libsqlite3_dir).join(', ')
+          puts "#{sqlite3_include} => " + Dir.entries(sqlite3_include).join(', ')
+          puts "#{sqlite3_lib} => " + Dir.entries(sqlite3_lib).join(', ')
+
           libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
           install_libyaml(libyaml_dir)
 
@@ -576,7 +592,7 @@ WARNING
           bundler_path   = "#{pwd}/#{slug_vendor_base}/gems/#{BUNDLER_GEM_PATH}/lib"
           # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
           # codon since it uses bundler.
-          env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:$CPATH CPPATH=#{yaml_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\" NOKOGIRI_USE_SYSTEM_LIBRARIES=true"
+          env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile #{sqlite3_build_var} BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:#{sqlite3_include}:$CPATH CPPATH=#{yaml_include}:#{sqlite3_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:#{sqlite3_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\" NOKOGIRI_USE_SYSTEM_LIBRARIES=true"
           env_vars      += " BUNDLER_LIB_PATH=#{bundler_path}" if ruby_version.ruby_version == "1.8.7"
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
