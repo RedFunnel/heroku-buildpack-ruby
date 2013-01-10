@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 ## v45.1 (2013-01-15)
 
 * Added support for including and compiling the sqlite3 gem
+=======
+## v46 (1/10/2012)
+
+Features:
+
+* Upgrade Bundler to 1.3.0.pre.5
+* bundler binstubs now go in vendor/bundle/bin
+>>>>>>> update changelog
 
 ## v45 (12/14/2012)
 

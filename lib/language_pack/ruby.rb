@@ -8,12 +8,8 @@ class LanguagePack::Ruby < LanguagePack::Base
   BUILDPACK_VERSION   = "v46"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
-<<<<<<< HEAD
   LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
   BUNDLER_VERSION     = "1.3.0.pre.2"
-=======
-  BUNDLER_VERSION     = "1.3.0.pre.5"
->>>>>>> update to bundler 1.3.0.pre.5
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
@@ -400,7 +396,7 @@ ERROR
 
       #   libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
       #   install_libsqlite3(libsqlite3_dir)
-        
+
       #   # need to setup compile environment for the sqlite gem
       #   sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
       #   sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
@@ -411,7 +407,7 @@ ERROR
 
         libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
         install_libsqlite3(libsqlite3_dir)
-        
+
         # need to setup compile environment for the sqlite gem
         sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
         sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
