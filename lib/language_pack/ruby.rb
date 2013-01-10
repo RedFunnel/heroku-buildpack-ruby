@@ -8,8 +8,12 @@ class LanguagePack::Ruby < LanguagePack::Base
   BUILDPACK_VERSION   = "v46"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
+<<<<<<< HEAD
   LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
   BUNDLER_VERSION     = "1.3.0.pre.2"
+=======
+  BUNDLER_VERSION     = "1.3.0.pre.5"
+>>>>>>> update to bundler 1.3.0.pre.5
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
