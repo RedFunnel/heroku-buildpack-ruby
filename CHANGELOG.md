@@ -1,3 +1,7 @@
+## v45.1 (2013-01-15)
+
+* Added support for including and compiling the sqlite3 gem
+
 ## v45 (12/14/2012)
 
 Features:
