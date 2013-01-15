@@ -8,7 +8,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   BUILDPACK_VERSION   = "v46"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
-  LIBSQLITE3_PATH     = "fatstax-sqlite-amalgamation-3071501"
+  LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
   BUNDLER_VERSION     = "1.3.0.pre.2"
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
@@ -411,7 +411,7 @@ ERROR
         # need to setup compile environment for the sqlite gem
         sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
         sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
-        
+
         sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
 
         puts "#{libsqlite3_dir} => " + Dir.entries(libsqlite3_dir).join(', ')
