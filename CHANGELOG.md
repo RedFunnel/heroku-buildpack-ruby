@@ -1,8 +1,17 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v45.1 (2013-01-15)
 
 * Added support for including and compiling the sqlite3 gem
 =======
+=======
+## v47
+
+Features:
+
+* Display ruby version change when busting the cache
+
+>>>>>>> update changelog
 ## v46 (1/10/2012)
 
 Features:
