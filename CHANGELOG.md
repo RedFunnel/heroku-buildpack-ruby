@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 ## v45.1 (2013-01-15)
 
 * Added support for including and compiling the sqlite3 gem
-=======
-=======
 ## v47
 
 Features:
@@ -13,6 +9,14 @@ Features:
 
 >>>>>>> update changelog
 ## v46 (1/10/2012)
+## v47 (1/30/2013)
+
+Features:
+
+* Disable ruby deploys due to rubygems.org compromise
+
+## v46 (1/10/2013)
+>>>>>>> temporarily disable deploys due to rubygems.org compromise
 
 Features:
 
