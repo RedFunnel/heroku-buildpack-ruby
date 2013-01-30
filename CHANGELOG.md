@@ -1,14 +1,16 @@
-## v45.1 (2013-01-15)
-
-* Added support for including and compiling the sqlite3 gem
-## v47
+## v49 (1/30/2013)
 
 Features:
 
+* Re-enable ruby deploys for apps just using the heroku cache
 * Display ruby version change when busting the cache
 
->>>>>>> update changelog
-## v46 (1/10/2012)
+## v48 (1/30/2013)
+
+Features:
+
+* Update deploy error message copy to link to status incident.
+
 ## v47 (1/30/2013)
 
 Features:
@@ -16,13 +18,11 @@ Features:
 * Disable ruby deploys due to rubygems.org compromise
 
 ## v46 (1/10/2013)
->>>>>>> temporarily disable deploys due to rubygems.org compromise
 
 Features:
 
 * Upgrade Bundler to 1.3.0.pre.5
 * bundler binstubs now go in vendor/bundle/bin
->>>>>>> update changelog
 
 ## v45 (12/14/2012)
 
