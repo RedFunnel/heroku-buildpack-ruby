@@ -1,3 +1,9 @@
+## v50 (1/31/2013)
+
+Features:
+
+* Restore ruby deploys back to normal
+
 ## v49 (1/30/2013)
 
 Features:
