@@ -5,7 +5,7 @@ require "language_pack/base"
 
 # base Ruby Language Pack. This is for any base ruby app.
 class LanguagePack::Ruby < LanguagePack::Base
-  BUILDPACK_VERSION   = "v49"
+  BUILDPACK_VERSION   = "v50"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
   LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
