@@ -9,7 +9,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   include LanguagePack::BundlerLockfile
   extend LanguagePack::BundlerLockfile
 
-  BUILDPACK_VERSION   = "v50"
+  BUILDPACK_VERSION   = "v51"
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
   LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
