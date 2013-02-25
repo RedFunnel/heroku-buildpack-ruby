@@ -13,7 +13,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   LIBYAML_VERSION     = "0.1.4"
   LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
   LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
-  BUNDLER_VERSION     = "1.3.0.pre.2"
+  BUNDLER_VERSION     = "1.3.0"
   BUNDLER_GEM_PATH    = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION        = "0.4.7"
   NODE_JS_BINARY_PATH = "node-#{NODE_VERSION}"
