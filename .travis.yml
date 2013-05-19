@@ -7,7 +7,6 @@ before_script: bundle exec rake hatchet:setup_travis
 
 # Run tests in parallel
 script: bundle exec parallel_rspec -n 7 spec/
-
 after_script:
   - heroku keys:remove ~/.ssh/id_rsa
 
