@@ -15,7 +15,7 @@ class LanguagePack::Metadata
     full_key = "#{FOLDER}/#{key}"
     File.read(full_key) if exists?(key)
   end
-  
+
   def exists?(key)
     full_key = "#{FOLDER}/#{key}"
     File.exists?(full_key) && !Dir.exists?(full_key)
