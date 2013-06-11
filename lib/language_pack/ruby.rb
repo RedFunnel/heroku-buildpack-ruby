@@ -121,7 +121,8 @@ private
   def ruby_version
     return @ruby_version if @ruby_version_run
 
-    @ruby_version_run = true
+    @ruby_version_run     = true
+    @ruby_version_env_var = false
 
     old_system_path = "/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
     @ruby_version = run_stdout("env PATH=#{old_system_path}:#{bundler_path}/bin GEM_PATH=#{bundler_path} bundle platform --ruby").chomp
@@ -139,7 +140,6 @@ private
       end
     else
       @ruby_version = @ruby_version.sub('(', '').sub(')', '').split.join('-')
-      @ruby_version_env_var = false
     end
 
     @ruby_version
