@@ -123,6 +123,7 @@ private
 
     @ruby_version_run     = true
     @ruby_version_env_var = false
+    @ruby_version_set     = false
 
     old_system_path = "/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
     @ruby_version = run_stdout("env PATH=#{old_system_path}:#{bundler_path}/bin GEM_PATH=#{bundler_path} bundle platform --ruby").chomp
@@ -141,7 +142,8 @@ private
         @ruby_version = @metadata.read("buildpack_ruby_version").chomp
       end
     else
-      @ruby_version = @ruby_version.sub('(', '').sub(')', '').split.join('-')
+      @ruby_version     = @ruby_version.sub('(', '').sub(')', '').split.join('-')
+      @ruby_version_set = true
     end
 
     @ruby_version
@@ -258,6 +260,10 @@ ERROR
 
     if !@ruby_version_env_var
       topic "Using Ruby version: #{ruby_version}"
+      if !@ruby_version_set
+        puts  "WARNING: you have not declared a ruby version in your Gemfile."
+        puts  "See https://devcenter.heroku.com/articles/ruby-versions for more information."
+      end
     else
       topic "Using RUBY_VERSION: #{ruby_version}"
       puts  "WARNING: RUBY_VERSION support has been deprecated and will be removed entirely on August 1, 2012."
