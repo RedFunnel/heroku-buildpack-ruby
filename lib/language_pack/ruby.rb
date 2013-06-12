@@ -262,15 +262,10 @@ ERROR
     if !@ruby_version_env_var
       topic "Using Ruby version: #{ruby_version}"
       if !@ruby_version_set
-<<<<<<< HEAD
         warn(<<WARNING)
 you have not declared a ruby version in your Gemfile.
 See https://devcenter.heroku.com/articles/ruby-versions for more information.
 WARNING
-=======
-        puts  "WARNING: you have not declared a ruby version in your Gemfile."
-        puts  "See https://devcenter.heroku.com/articles/ruby-versions for more information."
->>>>>>> warn when ruby version is not set in the Gemfile
       end
     else
       warn(<<WARNING)
