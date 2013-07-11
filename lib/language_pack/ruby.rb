@@ -309,6 +309,16 @@ WARNING
     true
   end
 
+  def ruby_version_to_gemfile
+    parts = ruby_version.split('-')
+    if parts.size > 2
+      # not mri
+      "ruby '#{parts[1]}', :engine => '#{parts[2]}', :engine_version => '#{parts.last}'"
+    else
+      "ruby '#{parts.last}'"
+    end
+  end
+
   def new_app?
     !File.exist?("vendor/heroku")
   end
