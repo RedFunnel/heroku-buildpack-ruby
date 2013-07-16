@@ -9,10 +9,11 @@ class LanguagePack::Ruby < LanguagePack::Base
   include LanguagePack::BundlerLockfile
   extend LanguagePack::BundlerLockfile::ClassMethods
 
-  BUILDPACK_VERSION   = "v67"
-  LIBYAML_VERSION     = "0.1.4"
-  LIBYAML_PATH        = "libyaml-#{LIBYAML_VERSION}"
-  LIBSQLITE3_PATH     = "fatstax-sqlite-vulcan-3071501"
+  NAME                 = "ruby"
+  BUILDPACK_VERSION    = "v67"
+  LIBYAML_VERSION      = "0.1.4"
+  LIBYAML_PATH         = "libyaml-#{LIBYAML_VERSION}"
+  LIBSQLITE3_PATH      = "fatstax-sqlite-vulcan-3071501"
   BUNDLER_VERSION      = "1.3.2"
   BUNDLER_GEM_PATH     = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION         = "0.4.7"
