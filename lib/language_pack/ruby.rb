@@ -11,7 +11,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   extend LanguagePack::BundlerLockfile::ClassMethods
 
   NAME                 = "ruby"
-  BUILDPACK_VERSION    = "v77"
+  BUILDPACK_VERSION    = "v78"
   LIBYAML_VERSION      = "0.1.4"
   LIBYAML_PATH         = "libyaml-#{LIBYAML_VERSION}"
   LIBSQLITE3_PATH      = "fatstax-sqlite-vulcan-3071501"
