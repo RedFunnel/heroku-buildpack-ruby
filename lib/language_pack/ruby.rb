@@ -22,6 +22,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   JVM_BASE_URL         = "http://heroku-jdk.s3.amazonaws.com"
   JVM_VERSION          = "openjdk7-latest"
   DEFAULT_RUBY_VERSION = "ruby-2.0.0"
+  DEFAULT_CACHE        = "#{DEFAULT_RUBY_VERSION}-default-cache"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
 
   # detects if this is a valid Ruby app
@@ -83,6 +84,8 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   def compile
     instrument 'ruby.compile' do
+      # check for new app at the beginning of the compile
+      new_app?
       Dir.chdir(build_path)
       remove_vendor_bundle
       install_ruby
@@ -336,7 +339,7 @@ See https://devcenter.heroku.com/articles/ruby-versions for more information.
   end
 
   def new_app?
-    !File.exist?("vendor/heroku")
+    @new_app ||= !File.exist?("vendor/heroku")
   end
 
   # vendors JVM into the slug for JRuby
@@ -431,6 +434,14 @@ See https://devcenter.heroku.com/articles/ruby-versions for more information.
   # @param [String] relative path of the binary on the slug
   def uninstall_binary(path)
     FileUtils.rm File.join('bin', File.basename(path)), :force => true
+  end
+
+  # loads a default bundler cache for new apps to speed up initial bundle installs
+  def load_default_cache
+    if new_app? && ruby_version == DEFAULT_RUBY_VERSION
+      puts "New app detected loading default bundler cache"
+      @fetchers[:buildpack].fetch_untar("#{DEFAULT_CACHE}.tgz")
+    end
   end
 
   # install libyaml into the LP to be referenced for psych compilation
@@ -552,6 +563,7 @@ WARNING
         load_bundler_cache
 
         bundler_output = ""
+        bundle_time    = nil
         Dir.mktmpdir("libyaml-") do |tmpdir|
           libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
           install_libyaml(libyaml_dir)
@@ -567,7 +579,9 @@ WARNING
           env_vars      += " BUNDLER_LIB_PATH=#{bundler_path}" if ruby_version && ruby_version.match(/^ruby-1\.8\.7/)
           puts "Running: #{bundle_command}"
           instrument "ruby.bundle_install" do
-            bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+            bundle_time = Benchmark.realtime do
+              bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+            end
           end
         end
 
@@ -758,6 +772,8 @@ params = CGI.parse(uri.query || "")
       rubygems_version_cache  = "rubygems_version"
 
       old_rubygems_version = @metadata.read(ruby_version_cache).chomp if @metadata.exists?(ruby_version_cache)
+
+      load_default_cache
 
       # fix bug from v37 deploy
       if File.exists?("vendor/ruby_version")
