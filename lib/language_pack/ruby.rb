@@ -319,7 +319,6 @@ ERROR_MSG
         warn(<<WARNING)
 you have not declared a ruby version in your Gemfile.
 See https://devcenter.heroku.com/articles/ruby-versions for more information.
-WARNING
       end
     end
 
