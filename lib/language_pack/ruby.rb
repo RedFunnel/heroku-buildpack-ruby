@@ -9,11 +9,11 @@ require "language_pack/ruby_version"
 # base Ruby Language Pack. This is for any base ruby app.
 class LanguagePack::Ruby < LanguagePack::Base
   NAME                 = "ruby"
-  BUILDPACK_VERSION    = "v81"
+  BUILDPACK_VERSION    = "v89"
   LIBYAML_VERSION      = "0.1.4"
   LIBYAML_PATH         = "libyaml-#{LIBYAML_VERSION}"
   LIBSQLITE3_PATH      = "fatstax-sqlite-vulcan-3071501"
-  BUNDLER_VERSION      = "1.3.2"
+  BUNDLER_VERSION      = "1.5.1"
   BUNDLER_GEM_PATH     = "bundler-#{BUNDLER_VERSION}"
   NODE_VERSION         = "0.4.7"
   NODE_JS_BINARY_PATH  = "node-#{NODE_VERSION}"
@@ -490,6 +490,7 @@ WARNING
         bundle_without = ENV["BUNDLE_WITHOUT"] || "development:test"
         bundle_bin     = "bundle"
         bundle_command = "#{bundle_bin} install --without #{bundle_without} --path vendor/bundle --binstubs #{bundler_binstubs_path}"
+        bundle_command << " -j4"
 
         unless File.exist?("Gemfile.lock")
           error "Gemfile.lock is required. Please run \"bundle install\" locally\nand commit your Gemfile.lock."
@@ -504,61 +505,13 @@ In rare occasions Bundler may not be able to resolve your dependencies at all.
 https://devcenter.heroku.com/articles/bundler-windows-gemfile
 WARNING
 
-        log("bundle", "has_windows_gemfile_lock")
-        File.unlink("Gemfile.lock")
-      else
-        # using --deployment is preferred if we can
-        bundle_command += " --deployment"
-        cache.load ".bundle"
-      end
-
-      version = run_stdout("#{bundle_bin} version").strip
-      topic("Installing dependencies using #{version}")
-
-      load_bundler_cache
-
-      bundler_output = ""
-
-      # Dir.mktmpdir("sqlite3-") do |tmpdir|
-
-      #   libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
-      #   install_libsqlite3(libsqlite3_dir)
-
-      #   # need to setup compile environment for the sqlite gem
-      #   sqlite3_include   = File.expand_path("#{libsqlite3_dir}/include")
-      #   sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/lib")
-      # end
-
-      Dir.mktmpdir("libyaml-") do |tmpdir|
-
-
-        libsqlite3_dir = "#{tmpdir}/#{LIBSQLITE3_PATH}"
-        install_libsqlite3(libsqlite3_dir)
-
-        # need to setup compile environment for the sqlite gem
-        sqlite3_include   = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/include")
-        sqlite3_lib       = File.expand_path("#{libsqlite3_dir}/#{LIBSQLITE3_PATH}/lib")
-
-        sqlite3_build_var = "BUNDLE_BUILD__SQLITE3=\"--with-sqlite3-lib=#{sqlite3_lib} --with-sqlite3-dir=#{sqlite3_include}\""
-
-        puts "#{libsqlite3_dir} => " + Dir.entries(libsqlite3_dir).join(', ')
-        puts "#{sqlite3_include} => " + Dir.entries(sqlite3_include).join(', ')
-        puts "#{sqlite3_lib} => " + Dir.entries(sqlite3_lib).join(', ')
-
-        libyaml_dir = "#{tmpdir}/#{LIBYAML_PATH}"
-        install_libyaml(libyaml_dir)
-
-        # need to setup compile environment for the psych gem
-        yaml_include   = File.expand_path("#{libyaml_dir}/include")
-        yaml_lib       = File.expand_path("#{libyaml_dir}/lib")
-        pwd            = run("pwd").chomp
-        bundler_path   = "#{pwd}/#{slug_vendor_base}/gems/#{BUNDLER_GEM_PATH}/lib"
-        # we need to set BUNDLE_CONFIG and BUNDLE_GEMFILE for
-        # codon since it uses bundler.
-        env_vars       = "env BUNDLE_GEMFILE=#{pwd}/Gemfile BUNDLE_CONFIG=#{pwd}/.bundle/config CPATH=#{yaml_include}:$CPATH CPPATH=#{yaml_include}:$CPPATH LIBRARY_PATH=#{yaml_lib}:$LIBRARY_PATH RUBYOPT=\"#{syck_hack}\""
-        env_vars      += " BUNDLER_LIB_PATH=#{bundler_path}" if ruby_version && ruby_version.match(/^ruby-1\.8\.7/)
-        puts "Running: #{bundle_command}"
-        bundler_output << pipe("#{env_vars} #{bundle_command} --no-clean 2>&1")
+          log("bundle", "has_windows_gemfile_lock")
+          File.unlink("Gemfile.lock")
+        else
+          # using --deployment is preferred if we can
+          bundle_command += " --deployment"
+          cache.load ".bundle"
+        end
 
         version = run_stdout("#{bundle_bin} version").strip
         topic("Installing dependencies using #{version}")
